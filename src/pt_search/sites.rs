@@ -264,7 +264,11 @@ fn nexus_defaults(overrides: NexusOverrides) -> FieldMap {
         downloadvolumefactor: nexus_dl_factor(),
         uploadvolumefactor: nexus_ul_factor(),
         free_deadline: Some(overrides.free_deadline.unwrap_or_else(nexus_free_deadline)),
-        imdbid: if overrides.has_imdb { Some(nexus_imdbid()) } else { None },
+        imdbid: if overrides.has_imdb {
+            Some(nexus_imdbid())
+        } else {
+            None
+        },
         extra: overrides.extra,
     }
 }
@@ -324,7 +328,9 @@ fn hdfans() -> SiteConfig {
             description: Some(desc_embedded_contents()),
             has_imdb: true,
             free_deadline: Some(FieldConfig {
-                default_value: Some("{% if fields['downloadvolumefactor']==0 %}{{max_time}}{% endif%}"),
+                default_value: Some(
+                    "{% if fields['downloadvolumefactor']==0 %}{{max_time}}{% endif%}",
+                ),
                 selector: Some(r#"td[class="embedded"] > font > span[title]"#),
                 attribute: Some("title"),
                 filters: vec![Filter::DateParse("%Y-%m-%d %H:%M:%S")],
@@ -355,11 +361,16 @@ fn hdsky() -> SiteConfig {
                 ..Default::default()
             }),
             extra: vec![
-                ("tags", FieldConfig::selector("td.embedded > span.optiontag")),
+                (
+                    "tags",
+                    FieldConfig::selector("td.embedded > span.optiontag"),
+                ),
                 (
                     "subject",
                     FieldConfig {
-                        selector: Some("td:nth-child(2) > table > tr > td.embedded > span:last-child"),
+                        selector: Some(
+                            "td:nth-child(2) > table > tr > td.embedded > span:last-child",
+                        ),
                         filters: vec![Filter::Replace("[优惠剩余时间：]", "")],
                         ..Default::default()
                     },
@@ -385,10 +396,15 @@ fn audiences() -> SiteConfig {
             description: Some(desc_tags_subject()),
             has_imdb: true,
             extra: vec![
-                ("tags", FieldConfig::selector("td.embedded > span.optiontag")),
+                (
+                    "tags",
+                    FieldConfig::selector("td.embedded > span.optiontag"),
+                ),
                 (
                     "subject",
-                    FieldConfig::selector("td:nth-child(2) > table > tr > td.embedded > span:last-child"),
+                    FieldConfig::selector(
+                        "td:nth-child(2) > table > tr > td.embedded > span:last-child",
+                    ),
                 ),
             ],
             ..Default::default()
@@ -411,10 +427,15 @@ fn azusa() -> SiteConfig {
             description: Some(desc_tags_subject()),
             has_imdb: true,
             extra: vec![
-                ("tags", FieldConfig::selector("td.embedded > span.optiontag")),
+                (
+                    "tags",
+                    FieldConfig::selector("td.embedded > span.optiontag"),
+                ),
                 (
                     "subject",
-                    FieldConfig::selector("td:nth-child(2) > table > tr > td.embedded > span:last-child"),
+                    FieldConfig::selector(
+                        "td:nth-child(2) > table > tr > td.embedded > span:last-child",
+                    ),
                 ),
             ],
             ..Default::default()
@@ -456,7 +477,9 @@ fn chdbits() -> SiteConfig {
             description: Some(desc_tags_subject()),
             has_imdb: true,
             free_deadline: Some(FieldConfig {
-                default_value: Some("{% if fields['downloadvolumefactor']==0 %}{{max_time}}{% endif%}"),
+                default_value: Some(
+                    "{% if fields['downloadvolumefactor']==0 %}{{max_time}}{% endif%}",
+                ),
                 selector: Some("td[class] > span[title]"),
                 attribute: Some("title"),
                 filters: vec![Filter::DateParse("%Y-%m-%d %H:%M:%S")],
@@ -505,10 +528,15 @@ fn hdhome() -> SiteConfig {
             description: Some(desc_tags_subject()),
             has_imdb: true,
             extra: vec![
-                ("tags", FieldConfig::selector("td.embedded > span.optiontag")),
+                (
+                    "tags",
+                    FieldConfig::selector("td.embedded > span.optiontag"),
+                ),
                 (
                     "subject",
-                    FieldConfig::selector("td:nth-child(2) > table > tr > td.embedded > span:last-child"),
+                    FieldConfig::selector(
+                        "td:nth-child(2) > table > tr > td.embedded > span:last-child",
+                    ),
                 ),
             ],
             ..Default::default()
@@ -577,10 +605,15 @@ fn ourbits() -> SiteConfig {
             has_imdb: false,
             category_qs_only: true,
             extra: vec![
-                ("tags", FieldConfig::selector("td.embedded > span.optiontag")),
+                (
+                    "tags",
+                    FieldConfig::selector("td.embedded > span.optiontag"),
+                ),
                 (
                     "subject",
-                    FieldConfig::selector("td:nth-child(2) > table > tr > td.embedded > span:last-child"),
+                    FieldConfig::selector(
+                        "td:nth-child(2) > table > tr > td.embedded > span:last-child",
+                    ),
                 ),
             ],
             ..Default::default()
@@ -604,10 +637,15 @@ fn pterclub() -> SiteConfig {
             has_imdb: false,
             category_qs_only: true,
             extra: vec![
-                ("tags", FieldConfig::selector("td.embedded > span.optiontag")),
+                (
+                    "tags",
+                    FieldConfig::selector("td.embedded > span.optiontag"),
+                ),
                 (
                     "subject",
-                    FieldConfig::selector("td:nth-child(2) > table > tr > td.embedded > span:last-child"),
+                    FieldConfig::selector(
+                        "td:nth-child(2) > table > tr > td.embedded > span:last-child",
+                    ),
                 ),
             ],
             ..Default::default()
@@ -923,7 +961,9 @@ fn totheglory() -> SiteConfig {
                 ..Default::default()
             },
             free_deadline: Some(FieldConfig {
-                default_value: Some("{% if fields['downloadvolumefactor']==0 %}{{max_time}}{% endif%}"),
+                default_value: Some(
+                    "{% if fields['downloadvolumefactor']==0 %}{{max_time}}{% endif%}",
+                ),
                 selector: Some("span[onclick]"),
                 attribute: Some("onclick"),
                 filters: vec![

@@ -81,8 +81,8 @@ async fn search_html(
     let html_text = resp.text().await?;
     let document = Html::parse_document(&html_text);
 
-    let row_sel =
-        Selector::parse(config.row_selector).map_err(|_| format!("Invalid row selector: {}", config.row_selector))?;
+    let row_sel = Selector::parse(config.row_selector)
+        .map_err(|_| format!("Invalid row selector: {}", config.row_selector))?;
 
     let mut results = Vec::new();
     for row_ref in document.select(&row_sel) {
@@ -93,11 +93,19 @@ async fn search_html(
         }
     }
 
-    debug!(site_id = config.site_id, count = results.len(), "Search completed");
+    debug!(
+        site_id = config.site_id,
+        count = results.len(),
+        "Search completed"
+    );
     Ok(results)
 }
 
-fn parse_row(row: &scraper::ElementRef, domain: &str, config: &SiteConfig) -> Option<PtSearchResult> {
+fn parse_row(
+    row: &scraper::ElementRef,
+    domain: &str,
+    config: &SiteConfig,
+) -> Option<PtSearchResult> {
     let raw = extract_all_fields(row, &config.fields);
 
     let id = raw.get("id").cloned().unwrap_or_default();
@@ -136,7 +144,10 @@ fn parse_row(row: &scraper::ElementRef, domain: &str, config: &SiteConfig) -> Op
         .cloned()
         .unwrap_or_default();
 
-    let download_url = make_absolute(domain, raw.get("download").map_or("", std::string::String::as_str));
+    let download_url = make_absolute(
+        domain,
+        raw.get("download").map_or("", std::string::String::as_str),
+    );
     let detail_url = make_absolute(
         domain,
         raw.get("details")

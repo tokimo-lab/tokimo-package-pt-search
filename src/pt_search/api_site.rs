@@ -57,7 +57,8 @@ async fn search_api(
 
     // Build request body with keyword substitution
     let body_str = api_config.body_template.replace("{{keyword}}", keyword);
-    let body: Value = serde_json::from_str(&body_str).unwrap_or(Value::Object(serde_json::Map::default()));
+    let body: Value =
+        serde_json::from_str(&body_str).unwrap_or(Value::Object(serde_json::Map::default()));
 
     if api_config.method != "GET" {
         req_builder = req_builder.json(&body);
@@ -80,7 +81,10 @@ async fn search_api(
             _ => String::new(),
         };
         if !code_str.is_empty() && code_str != "0" && code_str != "SUCCESS" {
-            let msg = json.get("message").and_then(|v| v.as_str()).unwrap_or("Unknown error");
+            let msg = json
+                .get("message")
+                .and_then(|v| v.as_str())
+                .unwrap_or("Unknown error");
             warn!(site_id = config.site_id, "API error: {}", msg);
             return Ok(Vec::new());
         }
@@ -108,7 +112,11 @@ async fn search_api(
         .filter_map(|item| map_api_result(item, &api_config.fields, domain))
         .collect();
 
-    debug!(site_id = config.site_id, count = results.len(), "API search completed");
+    debug!(
+        site_id = config.site_id,
+        count = results.len(),
+        "API search completed"
+    );
     Ok(results)
 }
 
@@ -127,7 +135,8 @@ fn map_api_result(
         }
     };
 
-    let get_opt = |path: Option<&str>| -> Option<String> { path.map(&get_str).filter(|s| !s.is_empty()) };
+    let get_opt =
+        |path: Option<&str>| -> Option<String> { path.map(&get_str).filter(|s| !s.is_empty()) };
 
     let id = get_str(fields.id);
     let title = get_str(fields.title);

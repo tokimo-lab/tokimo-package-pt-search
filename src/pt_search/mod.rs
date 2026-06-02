@@ -73,7 +73,9 @@ pub async fn search_site(
     };
 
     let mut results = match config.site_type {
-        SiteType::NexusPhp | SiteType::Public => nexus::search(client, keyword, domain, auth, &config).await,
+        SiteType::NexusPhp | SiteType::Public => {
+            nexus::search(client, keyword, domain, auth, &config).await
+        }
         SiteType::Api => api_site::search(client, keyword, domain, auth, &config).await,
     };
 
