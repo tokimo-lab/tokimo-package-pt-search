@@ -1,0 +1,23 @@
+[package]
+name = "tokimo-package-pt-search"
+version = "0.1.0"
+edition = "2024"
+description = "PT site torrent search and user info scraping"
+
+
+[lib]
+name = "tokimo_package_pt_search"
+path = "src/lib.rs"
+
+[dependencies]
+reqwest = { workspace = true, features = ["form"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+scraper = "0.26"
+regex = { workspace = true }
+percent-encoding = "2"
+url = { workspace = true }
+
+[lints]
+workspace = true
