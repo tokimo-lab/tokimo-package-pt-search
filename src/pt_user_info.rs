@@ -94,17 +94,11 @@ async fn fetch_mteam_user_info(site: &PtSiteInput) -> Result<PtUserInfo, String>
         return Err(format!("获取用户信息失败: HTTP {}", resp.status()));
     }
 
-    let json: Value = resp
-        .json()
-        .await
-        .map_err(|e| format!("解析响应失败: {e}"))?;
+    let json: Value = resp.json().await.map_err(|e| format!("解析响应失败: {e}"))?;
 
     let code = json.get("code").and_then(|v| v.as_str()).unwrap_or("-1");
     if code != "0" && code != "SUCCESS" {
-        let msg = json
-            .get("message")
-            .and_then(|v| v.as_str())
-            .unwrap_or("未知错误");
+        let msg = json.get("message").and_then(|v| v.as_str()).unwrap_or("未知错误");
         return Err(format!("API 错误: {msg}"));
     }
 
@@ -113,12 +107,8 @@ async fn fetch_mteam_user_info(site: &PtSiteInput) -> Result<PtUserInfo, String>
     let username = get_str(data, "username");
     let member_count = data.get("memberCount").unwrap_or(&Value::Null);
 
-    let uploaded_bytes = get_str(member_count, "uploaded")
-        .parse::<u64>()
-        .unwrap_or(0);
-    let downloaded_bytes = get_str(member_count, "downloaded")
-        .parse::<u64>()
-        .unwrap_or(0);
+    let uploaded_bytes = get_str(member_count, "uploaded").parse::<u64>().unwrap_or(0);
+    let downloaded_bytes = get_str(member_count, "downloaded").parse::<u64>().unwrap_or(0);
     let share_rate = get_number(member_count, "shareRate");
     let bonus = get_number(member_count, "bonus");
 

@@ -66,10 +66,7 @@ pub fn extract_field(row: &ElementRef, config: &FieldConfig) -> Option<String> {
 }
 
 /// Extract all raw fields from a torrent row, then resolve templates
-pub fn extract_all_fields(
-    row: &ElementRef,
-    field_map: &FieldMap,
-) -> std::collections::HashMap<String, String> {
+pub fn extract_all_fields(row: &ElementRef, field_map: &FieldMap) -> std::collections::HashMap<String, String> {
     let mut raw: std::collections::HashMap<String, String> = std::collections::HashMap::new();
 
     // Phase 1: extract all non-template fields
@@ -162,10 +159,7 @@ pub fn apply_filters(value: &str, filters: &[Filter]) -> String {
             Filter::ReSearch(pattern, group) => {
                 if let Ok(re) = Regex::new(pattern) {
                     if let Some(caps) = re.captures(&result) {
-                        result = caps
-                            .get(*group)
-                            .map(|m| m.as_str().to_string())
-                            .unwrap_or_default();
+                        result = caps.get(*group).map(|m| m.as_str().to_string()).unwrap_or_default();
                     } else {
                         result.clear();
                     }
@@ -233,10 +227,8 @@ pub fn resolve_field_template<S: ::std::hash::BuildHasher>(
         .to_string();
 
     // Handle {% if fields['x'] %}...{% else %}...{% endif %}
-    let re_if = Regex::new(
-        r"\{%\s*if\s+fields\['(\w+)'\]\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}",
-    )
-    .unwrap();
+    let re_if =
+        Regex::new(r"\{%\s*if\s+fields\['(\w+)'\]\s*%\}(.*?)(?:\{%\s*else\s*%\}(.*?))?\{%\s*endif\s*%\}").unwrap();
     result = re_if
         .replace_all(&result, |caps: &regex::Captures| {
             let key = &caps[1];
@@ -252,8 +244,7 @@ pub fn resolve_field_template<S: ::std::hash::BuildHasher>(
         .to_string();
 
     // Handle {% if fields['downloadvolumefactor']==0 %}...{% endif %}
-    let re_if_eq =
-        Regex::new(r"\{%\s*if\s+fields\['(\w+)'\]==(\d+)\s*%\}(.*?)\{%\s*endif\s*%\}").unwrap();
+    let re_if_eq = Regex::new(r"\{%\s*if\s+fields\['(\w+)'\]==(\d+)\s*%\}(.*?)\{%\s*endif\s*%\}").unwrap();
     result = re_if_eq
         .replace_all(&result, |caps: &regex::Captures| {
             let key = &caps[1];
@@ -269,10 +260,8 @@ pub fn resolve_field_template<S: ::std::hash::BuildHasher>(
         .to_string();
 
     // Handle {{ fields['x'] if fields['y'] else fields['z'] }}
-    let re_ternary = Regex::new(
-        r"\{\{\s*fields\['(\w+)'\]\s+if\s+fields\['(\w+)'\]\s+else\s+fields\['(\w+)'\]\s*\}\}",
-    )
-    .unwrap();
+    let re_ternary =
+        Regex::new(r"\{\{\s*fields\['(\w+)'\]\s+if\s+fields\['(\w+)'\]\s+else\s+fields\['(\w+)'\]\s*\}\}").unwrap();
     result = re_ternary
         .replace_all(&result, |caps: &regex::Captures| {
             let val_key = &caps[1];
@@ -333,15 +322,11 @@ pub fn resolve_search_template(template: &str, keyword: &str) -> String {
     result = result.replace("{{ query.keyword }}", keyword);
 
     // {% if query.imdb_id %}...{% else %}...{% endif %} → take else branch
-    let re_imdb =
-        Regex::new(r"\{%\s*if\s+query\.imdb_id\s*%\}.*?\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}")
-            .unwrap();
+    let re_imdb = Regex::new(r"\{%\s*if\s+query\.imdb_id\s*%\}.*?\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}").unwrap();
     result = re_imdb.replace_all(&result, "$1").to_string();
 
     // {% if query.free %}...{% else %}...{% endif %} → take else branch
-    let re_free =
-        Regex::new(r"\{%\s*if\s+query\.free\s*%\}.*?\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}")
-            .unwrap();
+    let re_free = Regex::new(r"\{%\s*if\s+query\.free\s*%\}.*?\{%\s*else\s*%\}(.*?)\{%\s*endif\s*%\}").unwrap();
     result = re_free.replace_all(&result, "$1").to_string();
 
     // Remove remaining template variables
